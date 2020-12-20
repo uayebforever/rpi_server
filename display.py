@@ -63,6 +63,7 @@ class Display:
             y_offset=40,
         )
 
+        self.clear()
         self.backlight_on()
 
     def backlight_on(self):
