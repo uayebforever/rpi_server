@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageColor
 
 import digitalio
 import board
@@ -8,8 +8,12 @@ from adafruit_rgb_display import st7789
 
 from utilities import Singleton
 
+from typing import Union, Tuple, List, Sequence
+
 # Setup SPI bus using hardware SPI:
 spi = board.SPI()
+
+BLACK = ImageColor.getrgb("Black")
 
 @Singleton
 class Display:
@@ -59,6 +63,8 @@ class Display:
             y_offset=40,
         )
 
+        self.backlight_on()
+
     def backlight_on(self):
         self._backlight_pin.value = True
 
@@ -70,7 +76,7 @@ class Display:
         self._draw.rectangle((0, 0, self.width, self.height), outline=0, fill=(0, 0, 0))
         self._disp.image(self._image, self._rotation)
 
-    def text(self, messages):
+    def text(self, messages: Union[str, Sequence]):
 
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)
 
@@ -86,3 +92,22 @@ class Display:
             y += font.getsize(line)[1]
 
         self._disp.image(self._image, self._rotation)
+
+    def image(self, image: Image):
+        my_image = image.convert(mode="RGB")  # returns a defensive copy in correct mode.
+        if my_image.size == (self.width, self.height):
+            # image is already correct size for display
+            self._disp.image(my_image, self._rotation)
+        else:
+            # image must be resized
+            self._disp.image(self._reduce_image(my_image), self._rotation)
+
+    def _reduce_image(self, my_image):
+        if my_image.width > self.width or my_image.height > self.height:
+            my_image.thumbnail((self.width, self.height), Image.BILINEAR)
+        padded_image = Image.new("RGB", (self.width, self.height), color=BLACK)
+        left_pad = (self.width - my_image.width) // 2
+        top_pad = (self.height - my_image.height) // 2
+        padded_image.paste(my_image, box=(left_pad, top_pad))
+        return padded_image
+
