@@ -4,8 +4,7 @@ class Singleton:
     This should be used as a decorator -- not a metaclass -- to the
     class that should be a singleton.
 
-    The decorated class can define one `__init__` function that
-    takes only the `self` argument. Also, the decorated class cannot be
+    The decorated class can define one `__init__` function. Also, the decorated class cannot be
     inherited from. Other than that, there are no restrictions that apply
     to the decorated class.
 
@@ -17,7 +16,7 @@ class Singleton:
     def __init__(self, decorated):
         self._decorated = decorated
 
-    def instance(self):
+    def instance(self, *args, **kwargs):
         """
         Returns the singleton instance. Upon its first call, it creates a
         new instance of the decorated class and calls its `__init__` method.
@@ -27,7 +26,7 @@ class Singleton:
         try:
             return self._instance
         except AttributeError:
-            self._instance = self._decorated()
+            self._instance = self._decorated(*args, **kwargs)
             return self._instance
 
     def __call__(self):
