@@ -3,3 +3,7 @@ numpy
 matplotlib
 adafruit-circuitpython-rgb-display
 spidev
+
+
+# data server requirements
+Flask

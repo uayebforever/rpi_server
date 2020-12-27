@@ -24,15 +24,19 @@ def data():
 
 @app.route("/temp")
 def temp():
-    data = str(subprocess.check_output(["tail", "-n1", "../temp_data.csv"]))
-    timestamp, greenhouse_temp, porch_temp = data.split(",")[:3]
+    data = subprocess.check_output(["tail", "-n1", "../temp_data_water.csv"]).decode()
+    timestamp, greenhouse_temp, porch_temp, water_temp, inside1_temp, inside2_temp = data.strip().split(",")
 
     greenhouse_f = round(float(greenhouse_temp) * 9 / 5 + 32, 1)
+    water_f = round(float(greenhouse_temp) * 9 / 5 + 32, 1)
     porch_f = round(float(porch_temp) * 9 / 5 + 32, 1)
+    inside_f = round((float(inside1_temp) + float(inside2_temp))/2 * 9 / 5 + 32, 1)
 
     return json.dumps(
         {"Greenhouse": "{:0.1f}°F".format(greenhouse_f),
-         "Front Porch": "{:0.1f}°F".format(porch_f)
+         "Greenhouse water": "{:0.1f}°F".format(water_f),
+         "Front Porch": "{:0.1f}°F".format(porch_f),
+         "Inside": "{:0.1f}°F".format(inside_f)
          })
 
 
