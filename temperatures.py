@@ -8,10 +8,11 @@ import time
 
 i2c = busio.I2C(board.SCL, board.SDA)
 
-mcp1 = adafruit_mcp9808.MCP9808(i2c, address=24)
-mcp2 = adafruit_mcp9808.MCP9808(i2c, address=25)
-mcp3 = adafruit_mcp9808.MCP9808(i2c, address=26)
-mcp4 = adafruit_mcp9808.MCP9808(i2c, address=28)
+mcp_water = adafruit_mcp9808.MCP9808(i2c, address=0x18)
+mcp_porch = adafruit_mcp9808.MCP9808(i2c, address=0x19)
+mcp_green = adafruit_mcp9808.MCP9808(i2c, address=0x1a)
+mcp_inside1 = adafruit_mcp9808.MCP9808(i2c, address=0x1b)
+mcp_inside2 = adafruit_mcp9808.MCP9808(i2c, address=0x1c)
 
 
 def write_to_file(timestamp, temp_data, filehandle):
@@ -25,16 +26,26 @@ def write_to_file(timestamp, temp_data, filehandle):
 
 def main(filename):
     print("{:^52s}".format("Measured Temperatures"))
-    print("{:^14s} {:^14s} {:^14s} {:^14s}".format("Greenhouse", "Front Porch", "Inside 1", "Inside 2"))
+    print("{:^14s} {:^14s} {:^14s} {:^14s} {:^14s}".format("Greenhouse", "Front Porch", "Water", "Inside 1", "Inside 2"))
 
-    print("{:12.1f}   {:12.1f}   {:12.1f}   {:12.1f}  ".format(
-        mcp1.temperature, mcp2.temperature, mcp3.temperature, mcp4.temperature))
+    print("{:12.1f}   {:12.1f}   {:12.1f}   {:12.1f}   {:12.1f}  ".format(
+        mcp_green.temperature,
+        mcp_porch.temperature,
+        mcp_water.temperature,
+        mcp_inside1.temperature,
+        mcp_inside2.temperature))
 
     with open(filename, "a") as fh:
 
         while True:
-            temp_data = (mcp1.temperature, mcp2.temperature, mcp3.temperature, mcp4.temperature)
-            print("{:12.1f}   {:12.1f}   {:12.1f}   {:12.1f}  ".format(*temp_data))
+            temp_data = (
+                mcp_green.temperature,
+                mcp_porch.temperature,
+                mcp_water.temperature,
+                mcp_inside1.temperature,
+                mcp_inside2.temperature
+            )
+            print("{:12.1f}   {:12.1f}   {:12.1f}   {:12.1f}   {:12.1f}  ".format(*temp_data))
 
             write_to_file(time.gmtime(), temp_data, fh)
 
