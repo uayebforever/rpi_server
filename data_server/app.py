@@ -28,7 +28,7 @@ def temp():
     timestamp, greenhouse_temp, porch_temp, water_temp, inside1_temp, inside2_temp = data.strip().split(",")
 
     greenhouse_f = round(float(greenhouse_temp) * 9 / 5 + 32, 1)
-    water_f = round(float(greenhouse_temp) * 9 / 5 + 32, 1)
+    water_f = round(float(water_temp) * 9 / 5 + 32, 1)
     porch_f = round(float(porch_temp) * 9 / 5 + 32, 1)
     inside_f = round((float(inside1_temp) + float(inside2_temp))/2 * 9 / 5 + 32, 1)
 
