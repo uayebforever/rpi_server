@@ -1,0 +1,14 @@
+[Unit]
+Description=Temperature Monitor Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 temperatures.py temp_data_water.csv
+WorkingDirectory=/home/pi/rpi_server
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=Data Server
+After=network.target
+
+[Service]
+ExecStart=/home/pi/data_server/data_server_venv/bin/python app.py
+WorkingDirectory=/home/pi/rpi_server/data_server
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
