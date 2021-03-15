@@ -1,8 +1,13 @@
 pillow
 numpy
 matplotlib
-adafruit-circuitpython-rgb-display
+
 spidev
+
+# Specific adafruit breakout board libraries:
+adafruit-circuitpython-rgb-display
+adafruit-circuitpython-mcp9808
+adafruit-circuitpython-si7021
 
 
 # data server requirements
