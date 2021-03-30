@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from concurrent.futures import ThreadPoolExecutor as Executor
+import time
+
 from PIL import Image, ImageDraw, ImageFont, ImageColor
 
 from utilities import Singleton
@@ -30,6 +33,11 @@ class Display:
 
     def backlight_on(self):
         self._display.backlight_on()
+        Executor.submit(self._backlight_timer)
+
+    def _backlight_timer(self):
+        time.sleep(60)
+        self.backlight_off()
 
     def backlight_off(self):
         self._display.backlight_off()
